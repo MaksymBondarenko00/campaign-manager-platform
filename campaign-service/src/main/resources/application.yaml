@@ -1,24 +1,12 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
   application:
-    name: auth-service
+    name: campaign-service
 
   datasource:
-    url: jdbc:h2:mem:authdb
+    url: jdbc:h2:mem:campaigndb
     driverClassName: org.h2.Driver
     username: sa
     password:

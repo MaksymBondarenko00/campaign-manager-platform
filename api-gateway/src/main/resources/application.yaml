@@ -9,8 +9,19 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
           lower-case-service-id: true
+
+      routes:
+
+        - id: user-security
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: company
+          uri: lb://CAMPAIGN-SERVICE
+          predicates:
+            - Path=/company/**
 
 eureka:
   client:
