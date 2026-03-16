@@ -34,12 +34,10 @@ public class WebSecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
-                                "/auth/**")
-                        .permitAll()
+                                "/auth/**",
+                                "/h2-console/**"
+                                ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers(
-                                "/manager/**")
-                        .hasAnyRole("COMPANY_OWNER", "MANAGER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -47,9 +45,9 @@ public class WebSecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .build();
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
         var authProvider = new DaoAuthenticationProvider();

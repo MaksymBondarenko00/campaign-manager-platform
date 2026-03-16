@@ -32,7 +32,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public void verify(@RequestParam String token) {
+    public void verify(@RequestParam("token") String token) {
         verificationTokenService.validateToken(token);
     }
 }
