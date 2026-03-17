@@ -5,12 +5,14 @@ import com.cpm.campaignservice.campaign.enums.CampaignStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ClickService {
@@ -34,6 +36,7 @@ public class ClickService {
 
         if (newFund.compareTo(BigDecimal.ZERO) <= 0) {
             campaign.setStatus(CampaignStatus.OFF);
+            log.info("Campaign {} stopped due to exhausted budget", campaignId);
         }
 
         clickRepository.save(
@@ -41,5 +44,6 @@ public class ClickService {
         );
 
         campaignRepository.save(campaign);
+        log.info("Click registered for campaign {}", campaignId);
     }
 }

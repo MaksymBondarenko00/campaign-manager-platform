@@ -1,4 +1,4 @@
-package com.cpm.accountservice.account.client;
+package com.cpm.accountservice.account.clients;
 
 
 import org.springframework.cloud.openfeign.FeignClient;

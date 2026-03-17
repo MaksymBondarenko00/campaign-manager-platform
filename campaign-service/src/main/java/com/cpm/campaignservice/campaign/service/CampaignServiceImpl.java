@@ -12,6 +12,7 @@ import com.cpm.campaignservice.product.ProductRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CampaignServiceImpl implements CampaignService {
@@ -45,6 +47,8 @@ public class CampaignServiceImpl implements CampaignService {
 
         var campaign = campaignMapper.toEntity(request);
         campaign.setProductId(product.getId());
+
+        log.info("Campaign {} created for account {}", campaign.getId(), campaign.getAccountId());
 
         return campaignRepository.save(campaign);
     }
@@ -75,6 +79,8 @@ public class CampaignServiceImpl implements CampaignService {
                 .orElseThrow(() -> new RuntimeException("Campaign not found"));
 
         accountClient.deposit(campaign.getAccountId(), campaign.getCampaignFund());
+
+        log.info("Campaign {} stopped", campaign.getId());
 
         campaignRepository.deleteById(id);
     }

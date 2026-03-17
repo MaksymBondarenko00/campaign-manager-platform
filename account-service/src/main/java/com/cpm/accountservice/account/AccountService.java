@@ -1,6 +1,6 @@
 package com.cpm.accountservice.account;
 
-import com.cpm.accountservice.account.client.UserClient;
+import com.cpm.accountservice.account.clients.UserClient;
 import com.cpm.accountservice.account.dto.AccountResponse;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
