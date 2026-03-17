@@ -1,6 +1,7 @@
 package com.cpm.authservice.system.security.token;
 
 
+import com.cpm.authservice.system.clients.AccountClient;
 import com.cpm.authservice.user.User;
 import com.cpm.authservice.user.UserRepository;
 import lombok.AccessLevel;
@@ -18,6 +19,7 @@ public class VerificationTokenService {
 
     VerificationTokenRepository verificationTokenRepository;
     UserRepository userRepository;
+    AccountClient accountClient;
 
     public VerificationToken generateToken(User user) {
 
@@ -48,6 +50,8 @@ public class VerificationTokenService {
         userRepository.save(user);
 
         markUsed(token);
+
+        accountClient.createAccount(user.getId());
     }
 
     public void markUsed(VerificationToken token) {
