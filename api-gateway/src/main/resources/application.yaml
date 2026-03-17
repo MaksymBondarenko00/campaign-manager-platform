@@ -13,15 +13,20 @@ spring:
 
       routes:
 
-        - id: user-security
+        - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
             - Path=/auth/**
 
-        - id: company
+        - id: campaign-service
           uri: lb://CAMPAIGN-SERVICE
           predicates:
-            - Path=/company/**
+            - Path=/campaign/**
+
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
+          predicates:
+            - Path=/account/**
 
 eureka:
   client:
