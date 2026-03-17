@@ -4,6 +4,7 @@ package com.cpm.authservice.system.security.token;
 import com.cpm.authservice.system.clients.AccountClient;
 import com.cpm.authservice.user.User;
 import com.cpm.authservice.user.UserRepository;
+import com.cpm.authservice.user.enums.Role;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -47,6 +48,7 @@ public class VerificationTokenService {
         }
 
         user.setEnabled(true);
+        user.getSystemRoles().add(Role.ACCOUNT_OWNER);
         userRepository.save(user);
 
         markUsed(token);
