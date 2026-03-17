@@ -1,0 +1,45 @@
+package com.cpm.campaignservice.click;
+
+import com.cpm.campaignservice.campaign.CampaignRepository;
+import com.cpm.campaignservice.campaign.enums.CampaignStatus;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class ClickService {
+    CampaignRepository campaignRepository;
+    ClickRepository clickRepository;
+    ClickMapper clickMapper;
+
+    @Transactional
+    public void registerClick(Long campaignId) {
+        var campaign = campaignRepository.findByIdForUpdate(campaignId)
+                .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
+        if (campaign.getStatus() != CampaignStatus.ON) {
+            throw new RuntimeException("Campaign not active");
+        }
+
+        var newFund = campaign.getCampaignFund()
+                .subtract(campaign.getBidAmount());
+
+        campaign.setCampaignFund(newFund);
+
+        if (newFund.compareTo(BigDecimal.ZERO) <= 0) {
+            campaign.setStatus(CampaignStatus.OFF);
+        }
+
+        clickRepository.save(
+                clickMapper.toEntity(campaign)
+        );
+
+        campaignRepository.save(campaign);
+    }
+}
