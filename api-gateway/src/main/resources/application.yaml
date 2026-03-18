@@ -1,0 +1,54 @@
+server:
+  port: ${PORT:8080}
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true
+
+      routes:
+
+        - id: auth-service-users
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/users/**
+
+        - id: campaign-service
+          uri: lb://CAMPAIGN-SERVICE
+          predicates:
+            - Path=/campaigns/**
+
+        - id: campaign-service-products
+          uri: lb://CAMPAIGN-SERVICE
+          predicates:
+            - Path=/products/**
+
+        - id: campaign-service-clicks
+          uri: lb://CAMPAIGN-SERVICE
+          predicates:
+            - Path=/clicks/**
+
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
+          predicates:
+            - Path=/accounts/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
