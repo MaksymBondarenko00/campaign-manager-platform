@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                                 "/eureka/**",
                                 "/actuator/**",
                                 "/",
+                                "/favicon.ico",
                                 "/auth/**",
                                 "/h2-console/**",
                                 "/v3/api-docs/**",

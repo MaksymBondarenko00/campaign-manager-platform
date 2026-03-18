@@ -29,6 +29,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        if (path.startsWith("/actuator") ||
+                path.startsWith("/eureka") ||
+                path.equals("/") ||
+                path.equals("/favicon.ico")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         var authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
