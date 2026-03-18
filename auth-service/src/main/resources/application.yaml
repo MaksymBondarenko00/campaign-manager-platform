@@ -33,6 +33,10 @@ spring:
     console:
       enabled: true
 
+jwt:
+  secret: ${SECRET_KEY}
+
+
 eureka:
   client:
     service-url:
