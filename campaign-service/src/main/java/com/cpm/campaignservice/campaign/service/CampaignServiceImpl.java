@@ -2,17 +2,24 @@ package com.cpm.campaignservice.campaign.service;
 
 import com.cpm.campaignservice.campaign.Campaign;
 import com.cpm.campaignservice.campaign.CampaignMapper;
-import com.cpm.campaignservice.campaign.CampaignRepository;
 import com.cpm.campaignservice.campaign.dto.CreateCampaignRequest;
 import com.cpm.campaignservice.campaign.dto.UpdateCampaignRequest;
+import com.cpm.campaignservice.campaign.enums.CampaignStatus;
+import com.cpm.campaignservice.campaign.repository.CampaignRepository;
+import com.cpm.campaignservice.campaign.repository.CampaignSearchRepository;
 import com.cpm.campaignservice.clients.AccountClient;
 import com.cpm.campaignservice.clients.UserClient;
 import com.cpm.campaignservice.product.Product;
 import com.cpm.campaignservice.product.ProductRepository;
+import com.cpm.campaignservice.system.exceptions.InsufficientBalanceException;
+import com.cpm.campaignservice.system.exceptions.InvalidCampaignException;
+import com.cpm.campaignservice.system.exceptions.ProductOwnershipException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,6 +38,7 @@ public class CampaignServiceImpl implements CampaignService {
     CampaignMapper campaignMapper;
     UserClient userClient;
     AccountClient accountClient;
+    CampaignSearchRepository campaignSearchRepository;
 
     @Override
     public Campaign createCampaign(CreateCampaignRequest request) {
@@ -95,33 +103,47 @@ public class CampaignServiceImpl implements CampaignService {
         return campaignRepository.findByAccountId(getCurrentAccountId());
     }
 
+    @Override
+    public Page<Campaign> getAllCampaigns(Pageable pageable) {
+        return campaignRepository.findAllByStatus(CampaignStatus.ON, pageable);
+    }
+
+    @Override
+    public Page<Campaign> getAllCampaignsWithoutAccount(Pageable pageable) {
+        return campaignRepository.findAllByAccountIdNot(pageable, getCurrentAccountId());
+    }
+
+    @Override
+    public Page<Campaign> searchCampaigns(String query, String town, Integer radius, Pageable pageable) {
+        return campaignSearchRepository.searchCampaigns(query, town, radius, pageable);
+    }
+
     private void validateCampaign(CreateCampaignRequest request, Product product) {
         if (request.campaignFund().compareTo(accountClient.getBalance()) > 0) {
-            throw new RuntimeException("Campaign fund exceeds account balance");
+            throw new InsufficientBalanceException("Campaign fund exceeds account balance");
         }
 
         if (!product.getAccountId().equals(request.accountId())) {
-            throw new IllegalArgumentException("Product does not belong to account");
+            throw new ProductOwnershipException("Product does not belong to account");
         }
 
         if (request.bidAmount().compareTo(request.campaignFund()) > 0) {
-            throw new IllegalArgumentException("Bid amount cannot exceed campaign fund");
+            throw new InvalidCampaignException("Bid amount cannot exceed campaign fund");
         }
 
         if (request.campaignFund().compareTo(
                 request.bidAmount().multiply(BigDecimal.valueOf(10))
         ) < 0) {
-            throw new IllegalArgumentException("Campaign fund too small for bid");
+            throw new InvalidCampaignException("Campaign fund too small for bid");
         }
 
         if (request.keywords().isEmpty()) {
-            throw new IllegalArgumentException("At least one keyword required");
+            throw new InvalidCampaignException("At least one keyword required");
         }
 
         if (request.keywords().size() > 20) {
-            throw new IllegalArgumentException("Too many keywords (max 20)");
+            throw new InvalidCampaignException("Too many keywords (max 20)");
         }
-
     }
 
     private <T> void updateIfNotNull(T value, Consumer<T> setter) {
@@ -141,13 +163,23 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     private void syncCampaignFundWithAccount(Campaign campaign, BigDecimal newFund) {
+        if (newFund == null) {
+            return;
+        }
+
         var oldFund = campaign.getCampaignFund();
         var comparison = newFund.compareTo(oldFund);
 
         if (comparison > 0) {
-            var difference = newFund.subtract(oldFund);
-            accountClient.deduct(campaign.getAccountId(), difference);
 
+            var difference = newFund.subtract(oldFund);
+            var balance = accountClient.getBalance();
+
+            if (balance.compareTo(difference) < 0) {
+                throw new InsufficientBalanceException("Campaign fund exceeds account balance");
+            }
+
+            accountClient.deduct(campaign.getAccountId(), difference);
         } else if (comparison < 0) {
             var difference = oldFund.subtract(newFund);
             accountClient.deposit(campaign.getAccountId(), difference);

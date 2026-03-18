@@ -1,7 +1,7 @@
 package com.cpm.campaignservice.click;
 
-import com.cpm.campaignservice.campaign.CampaignRepository;
 import com.cpm.campaignservice.campaign.enums.CampaignStatus;
+import com.cpm.campaignservice.campaign.repository.CampaignRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

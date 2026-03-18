@@ -1,6 +1,7 @@
 server:
   port: 8080
 
+
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
@@ -17,10 +18,15 @@ spring:
 
       routes:
 
-        - id: auth-service
+        - id: auth-service-users
           uri: lb://AUTH-SERVICE
           predicates:
             - Path=/auth/**
+
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/users/**
 
         - id: campaign-service
           uri: lb://CAMPAIGN-SERVICE

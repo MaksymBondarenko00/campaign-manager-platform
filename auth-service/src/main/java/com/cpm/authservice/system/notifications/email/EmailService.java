@@ -19,7 +19,7 @@ public class EmailService {
 
     public void sendVerificationEmail(String to, String token) {
 
-        String verificationLink = "http://localhost:8080/auth/verify?token=" + token;
+        String verificationLink = "http://localhost:3001/auth/verify?token=" + token;
 
         String subject = "Confirm your email address";
 

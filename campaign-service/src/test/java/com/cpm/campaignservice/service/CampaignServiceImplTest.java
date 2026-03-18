@@ -2,10 +2,10 @@ package com.cpm.campaignservice.service;
 
 import com.cpm.campaignservice.campaign.Campaign;
 import com.cpm.campaignservice.campaign.CampaignMapper;
-import com.cpm.campaignservice.campaign.CampaignRepository;
 import com.cpm.campaignservice.campaign.dto.CreateCampaignRequest;
 import com.cpm.campaignservice.campaign.dto.UpdateCampaignRequest;
 import com.cpm.campaignservice.campaign.enums.CampaignStatus;
+import com.cpm.campaignservice.campaign.repository.CampaignRepository;
 import com.cpm.campaignservice.campaign.service.CampaignServiceImpl;
 import com.cpm.campaignservice.clients.AccountClient;
 import com.cpm.campaignservice.clients.UserClient;
@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CampaignServiceImplTest {
@@ -166,7 +167,7 @@ class CampaignServiceImplTest {
     }
 
     @Test
-    void getCampaignsByAccount_test() {
+    void getAllCampaignsByAccount_test() {
 
         var campaigns = List.of(new Campaign(), new Campaign());
 
@@ -179,7 +180,7 @@ class CampaignServiceImplTest {
     }
 
     @Test
-    void getCampaigns_currentAccount_test() {
+    void getAllCampaigns_currentAccount_test() {
 
         var campaigns = List.of(new Campaign());
 

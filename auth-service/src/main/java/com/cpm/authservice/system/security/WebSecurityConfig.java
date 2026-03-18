@@ -33,22 +33,55 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers(
+
+                .authorizeHttpRequests(auth -> auth
+                        // public endpoints
+                        .requestMatchers(
                                 "/auth/**",
-                                "/h2-console/**"
-                                ).permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                                "/h2-console/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/campaigns/all",
+                                "/campaigns/search"
+                        ).permitAll()
+
+                        // admin endpoints
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
+
+                        // account endpoints
+                        .requestMatchers("/accounts/**")
+                        .hasAnyRole("ACCOUNT_OWNER", "ADMIN")
+
+                        // campaign endpoints
+                        .requestMatchers("/campaigns/**")
+                        .hasAnyRole("ACCOUNT_OWNER", "ADMIN")
+
+                        // product endpoints
+                        .requestMatchers("/products/**")
+                        .hasAnyRole("ACCOUNT_OWNER", "ADMIN")
+
+                        // click endpoints
+                        .requestMatchers("/clicks/**")
+                        .permitAll()
+
+                        // everything else
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
                 .authenticationProvider(authenticationProvider())
+
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+
                 .build();
-    }
-    @Bean
+    }    @Bean
     public AuthenticationProvider authenticationProvider() {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
