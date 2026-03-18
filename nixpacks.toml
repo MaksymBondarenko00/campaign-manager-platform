@@ -1,5 +1,9 @@
 [phases.build]
-cmds = ["mvn -pl discovery-service -am clean package -DskipTests"]
+cmds = [
+  "mkdir -p target",
+  "mvn -pl discovery-service -am clean package -DskipTests",
+  "cp discovery-service/target/*.jar target/app.jar"
+]
 
 [start]
-cmd = "java -jar discovery-service/target/service-discovery-0.0.1-SNAPSHOT.jar"
+cmd = "java -jar target/app.jar"
