@@ -1,5 +1,5 @@
 [phases.build]
-cmds = ["mvn -pl discovery-service -am clean package -DskipTests"]
+cmds = ["mvn -B -DskipTests clean package"]
 
 [start]
-cmd = "java -Dserver.port=$PORT -jar discovery-service/target/*.jar"
+cmd = "java -jar discovery-service/target/*.jar"
