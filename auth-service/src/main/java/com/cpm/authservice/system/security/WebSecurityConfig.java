@@ -37,6 +37,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // public endpoints
                         .requestMatchers(
+                                "/eureka/**",
+                                "/actuator/**",
+                                "/",
+                                "/favicon.ico",
                                 "/auth/**",
                                 "/h2-console/**",
                                 "/v3/api-docs/**",
