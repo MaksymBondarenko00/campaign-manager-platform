@@ -2,4 +2,4 @@
 cmds = ["mvn -pl discovery-service -am clean package -DskipTests"]
 
 [start]
-cmd = "java -jar discovery-service/target/*.jar"
+cmd = "java -jar discovery-service/target/service-discovery-0.0.1-SNAPSHOT.jar"
