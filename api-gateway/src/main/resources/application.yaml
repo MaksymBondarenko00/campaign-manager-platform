@@ -12,9 +12,16 @@ spring:
 
   cloud:
     gateway:
-      discovery:
-        locator:
-          lower-case-service-id: true
+      globals:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3001"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
 
       routes:
 
