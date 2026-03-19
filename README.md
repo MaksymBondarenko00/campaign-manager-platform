@@ -23,13 +23,13 @@ The project consists of the following services:
 ## Service Ports
 
 | Service           | Port |
-| ----------------- | ---- |
+| ----------------- |------|
 | API Gateway       | 8080 |
 | Auth Service      | 8081 |
 | Campaign Service  | 8082 |
 | Account Service   | 8083 |
 | Discovery Service | 8761 |
-| Frontend          | 5173 |
+| Frontend          | 3001 |
 
 ---
 
@@ -39,6 +39,7 @@ The project consists of the following services:
 * API Gateway routes requests to appropriate services
 * Frontend communicates only with API Gateway
 * Services communicate with each other via service discovery
+* Actual branch - release
 
 ---
 
