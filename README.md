@@ -39,7 +39,7 @@ The project consists of the following services:
 * API Gateway routes requests to appropriate services
 * Frontend communicates only with API Gateway
 * Services communicate with each other via service discovery
-* Actual branch - release
+* Actual backend branch - release | frontend - main
 
 ---
 
