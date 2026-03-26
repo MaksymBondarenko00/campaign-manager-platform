@@ -13,6 +13,9 @@ eureka:
   instance:
     hostname: discovery-service
 
+  server:
+    enable-self-preservation: false
+
 management:
   endpoints:
     web:

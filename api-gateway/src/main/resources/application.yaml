@@ -52,5 +52,8 @@ eureka:
   client:
     service-url:
       defaultZone: https://campaign-manager-platform.onrender.com/eureka
+    registry-fetch-interval-seconds: 30
+    instance-info-replication-interval-seconds: 30
   instance:
     prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 30
