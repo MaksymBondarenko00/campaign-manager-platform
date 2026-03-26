@@ -40,6 +40,6 @@ jwt:
 eureka:
   client:
     service-url:
-      defaultZone: https://discovery-service.onrender.com/eureka
+      defaultZone: https://campaign-manager-platform.onrender.com/eureka
   instance:
     prefer-ip-address: false
