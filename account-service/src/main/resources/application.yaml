@@ -25,6 +25,6 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_URL}
+      defaultZone: https://discovery-service.onrender.com/eureka
   instance:
     prefer-ip-address: false
