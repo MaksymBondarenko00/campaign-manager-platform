@@ -21,12 +21,12 @@ spring:
         - id: auth-service-users
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/auth/**
+            - Path=/users/**
 
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/users/**
+            - Path=/auth/**
 
         - id: campaign-service
           uri: lb://CAMPAIGN-SERVICE
