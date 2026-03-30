@@ -33,6 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (path.startsWith("/actuator") ||
                 path.startsWith("/eureka") ||
+                path.startsWith("/auth") ||
                 path.equals("/") ||
                 path.equals("/favicon.ico")) {
 
