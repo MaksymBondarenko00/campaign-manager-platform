@@ -28,5 +28,5 @@ eureka:
     registry-fetch-interval-seconds: 30
     instance-info-replication-interval-seconds: 30
   instance:
-    prefer-ip-address: false
+    prefer-ip-address: true
     lease-renewal-interval-in-seconds: 30
