@@ -47,7 +47,8 @@ public class WebSecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/campaigns/view",
-                                "/campaigns/search"
+                                "/campaigns/search",
+                                "/error"
                         ).permitAll()
 
                         // admin endpoints
